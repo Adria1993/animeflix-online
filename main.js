@@ -848,6 +848,35 @@ var AnimeViewComponent = /** @class */ (function () {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
                 this.firstEntryInterval = false;
                 this.initInterval();
+                if (localStorage.getItem("animes") != null || localStorage.getItem("animes") != undefined) {
+                    this.animes = JSON.parse(localStorage.getItem('animes'));
+                    this.collection.data = this.animes;
+                    this.collection.count = this.collection.data.length;
+                    this.config = {
+                        itemsPerPage: 5,
+                        currentPage: 1,
+                        totalItems: this.collection.count
+                    };
+                    this.animes.forEach(function (x) { return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this, void 0, void 0, function () {
+                        var value;
+                        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    x.brief_desc = x.description.substr(0, 120) + "...";
+                                    if (x.description.length < 120) {
+                                        x.brief_desc = x.description;
+                                        x.show_more = false;
+                                    }
+                                    return [4 /*yield*/, this.httpEpisodes.getNumberEpisodes(x._id)];
+                                case 1:
+                                    value = _a.sent();
+                                    x.total_episodes = value.length;
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    this.options = this.animes;
+                }
                 this.loadAnimes();
                 this.selectedVal = "cards";
                 this.filteredOptions = this.myControl.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["startWith"])(''), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (state) { return state ? _this._filter(state) : _this.options.slice(); }));
@@ -883,7 +912,7 @@ var AnimeViewComponent = /** @class */ (function () {
                     case 3: return [2 /*return*/];
                 }
             });
-        }); }, 60000);
+        }); }, 1800000);
     };
     AnimeViewComponent.prototype.changeSelection = function (selected) {
         this.selectedVal = selected;
@@ -919,6 +948,7 @@ var AnimeViewComponent = /** @class */ (function () {
                         _a.animes = _b.sent();
                         this.options = this.animes;
                         if (this.animes != null) {
+                            localStorage.setItem('animes', JSON.stringify(this.animes));
                             this.collection.data = this.animes;
                             this.collection.count = this.collection.data.length;
                             this.config = {
